@@ -1,5 +1,6 @@
-TP/flaubert
 **/.DS_Store
-.idea/
-data/
 **/__pycache__
+TP/flaubert/
+**/.idea/
+logs/
+data/
