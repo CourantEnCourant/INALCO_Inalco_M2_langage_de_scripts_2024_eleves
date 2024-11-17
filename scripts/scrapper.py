@@ -4,10 +4,16 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 
-from typing import List, Tuple, Dict
+from datetime import datetime
 import logging
 
+from pathlib import Path
+from typing import List, Tuple, Dict
+import csv
+from tqdm import tqdm
+
 content2xpath = {
+    'ID': '//*[@id="words-list"]/h3',
     'date': '//*[@id="text-details"]/div',
     'provenance': '//*[@id="text-details"]/p[1]/*[position()>1]',
     'material': '//*[@id="text-details"]/p[3]/*[position()>1]',
@@ -50,11 +56,47 @@ def scrap_papyrus(url: str, driver: WebDriver) -> dict:
     return page
 
 
-def main():
+def main(input_file: Path, output_file: Path, log_file: Path) -> None:
+    # Configurate logger
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        filename=log_file,
+                        filemode='w')
+
+    # Get urls from input file
+    with open(input_file, "r") as f:
+        urls = f.read().splitlines()
+    logging.info(f"Got {len(urls)} urls")
+
+    # Configurate driver
     driver = webdriver.Chrome(service=Service())
     driver.implicitly_wait(5)
-    scrap_papyrus(url='https://www.trismegistos.org/text/103', driver=driver)
+
+    # Scrap pages
+    pages = []
+    for url in tqdm(urls, desc='Scrapping'):
+        page = scrap_papyrus(url, driver)
+        pages.append(page)
+
+    # Output to .csv
+    with open(output_file, "w", newline='') as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerow(pages[0].keys())
+        for page in tqdm(pages, desc="Output to csv"):
+            writer.writerow(page.values())
+        logging.info(f"Output saved to {output_file}")
 
 
 if __name__ == '__main__':
-    main()
+    current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input_file', default='../data/urls.txt', type=Path, help="File containing url to scrap.")
+    parser.add_argument('-o', '--output_file', default='../data/corpus_scrapped.csv', type=Path, help="Output .csv file.")
+    parser.add_argument('-l', '--log_file', default=f'../logs/log_{current_time}.txt', type=Path, help="Log file.")
+    args = parser.parse_args()
+
+    main(input_file=args.input_file,
+         output_file=args.output_file,
+         log_file=args.log_file)
