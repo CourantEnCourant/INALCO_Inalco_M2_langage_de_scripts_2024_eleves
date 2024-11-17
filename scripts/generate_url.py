@@ -33,12 +33,12 @@ if __name__ == '__main__':
 
     parser.add_argument('--start',
                         type=int,
-                        default=100,
+                        default=600,
                         help="Start index of url.")
 
     parser.add_argument('--end',
                         type=int,
-                        default=200,
+                        default=610,
                         help="End index of url.")
 
     args = parser.parse_args()
