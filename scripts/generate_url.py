@@ -16,6 +16,7 @@ def main(output: Path, start: int, end: int) -> None:
     logging.basicConfig(level=logging.DEBUG)
     # Generate url list
     url_list = generate_url(start, end)
+    logging.info(f"Generated {len(url_list)} urls")
     # Output to file
     with open(output, "w") as f:
         for url in url_list:
@@ -33,7 +34,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--start',
                         type=int,
-                        default=600,
+                        default=601,
                         help="Start index of url.")
 
     parser.add_argument('--end',
