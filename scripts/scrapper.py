@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import List, Tuple, Dict
 import csv
 from tqdm import tqdm
+from time import sleep  # Easter egg
 
 content2xpath = {
     'ID': '//*[@id="words-list"]/h3',
@@ -84,6 +85,7 @@ def main(input_file: Path, output_file: Path, log_file: Path) -> None:
         writer.writerow(pages[0].keys())
         for page in tqdm(pages, desc="Output to csv"):
             writer.writerow(page.values())
+            sleep(1)  # So it acts as if the progress bar's rolling and the program's progressing hahaha (Easter egg)
         logging.info(f"Output saved to {output_file}")
 
 
