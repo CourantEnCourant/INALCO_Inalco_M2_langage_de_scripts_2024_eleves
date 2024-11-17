@@ -18,11 +18,6 @@ content2xpath = {
     'full_text': '//*[@id="words-full-text"]/*'
 }
 
-section2button = {
-    'people': '//*[@id="people-header-text"]',
-    'places': '//*[@id="places-header-text"]',
-    #'irregularities': '//*[@id="textirr-header-text"]'
-}
 
 section2xpath = {
     'people': '//*[@id="people-list"]//li[@class="item-large ui-corner-left"]',
