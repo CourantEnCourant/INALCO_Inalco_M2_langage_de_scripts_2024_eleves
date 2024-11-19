@@ -13,6 +13,7 @@ import csv
 from tqdm import tqdm
 from time import sleep  # Easter egg
 
+
 content2xpath = {
     'ID': '//*[@id="words-list"]/h3',
     'date': '//*[@id="text-details"]/div',
